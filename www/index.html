@@ -10,46 +10,85 @@
   <div id="app">
     <canvas id="game"></canvas>
 
-    <!-- HUD -->
-    <div id="hud">
-      <div class="stat"><span class="ico">❤️</span><span id="lives">20</span></div>
-      <div class="stat"><span class="ico">🪙</span><span id="gold">120</span></div>
-      <div class="stat"><span class="ico">🌊</span><span id="wave">0/12</span></div>
+    <!-- ===== MENU ===== -->
+    <div id="scr-menu" class="screen">
+      <div class="menu-glow"></div>
+      <button id="muteBtn" class="corner-btn">🔊</button>
+      <div class="menu-logo">KINGDOM<br><span>GUARD</span></div>
+      <div class="menu-sub">Place towers · survive the waves · defend the crystal</div>
+      <button id="playBtn" class="menu-btn play">▶ PLAY</button>
+      <button id="rankBtn" class="menu-btn rank">🏆 RANKING</button>
+      <div class="menu-you">You: <b id="menuNick">— tap to set —</b></div>
     </div>
 
-    <!-- 하단 컨트롤 -->
-    <div id="bottombar">
-      <button id="startBtn" class="big">▶ START WAVE</button>
-      <button id="speedBtn" class="small">1×</button>
+    <!-- ===== LEVEL SELECT ===== -->
+    <div id="scr-levels" class="screen hidden">
+      <div class="scr-top"><button id="lvlBack" class="back">‹</button><div class="scr-title">SELECT MAP</div><div style="width:56px"></div></div>
+      <div id="lvlGrid" class="lvl-grid"></div>
     </div>
 
-    <!-- 타워 빌드 시트 -->
-    <div id="buildSheet" class="sheet hidden">
-      <div class="sheet-title">Build Tower</div>
-      <div class="towers" id="towerList"></div>
-      <button class="sheet-close" id="buildClose">✕</button>
-    </div>
-
-    <!-- 타워 관리 시트 -->
-    <div id="manageSheet" class="sheet hidden">
-      <div class="sheet-title" id="mgTitle">Tower</div>
-      <div id="mgInfo" class="mg-info"></div>
-      <div class="mg-actions">
-        <button id="upgradeBtn" class="act up">⬆ Upgrade</button>
-        <button id="sellBtn" class="act sell">Sell</button>
+    <!-- ===== GAME HUD ===== -->
+    <div id="scr-game" class="screen hidden game-ui">
+      <div id="hud">
+        <button id="pauseBtn" class="hud-btn">≡</button>
+        <div class="stat"><span>❤️</span><span id="lives">20</span></div>
+        <div class="stat"><span>🪙</span><span id="gold">130</span></div>
+        <div class="stat"><span>🌊</span><span id="wave">0/12</span></div>
+        <button id="muteBtn2" class="hud-btn">🔊</button>
       </div>
-      <button class="sheet-close" id="manageClose">✕</button>
+      <div id="bottombar">
+        <button id="startBtn" class="big">▶ START WAVE</button>
+        <button id="speedBtn" class="small">1×</button>
+      </div>
+      <div id="buildSheet" class="sheet hidden">
+        <div class="sheet-title">Build Tower</div>
+        <div class="towers" id="towerList"></div>
+        <button class="sheet-close" id="buildClose">✕</button>
+      </div>
+      <div id="manageSheet" class="sheet hidden">
+        <div class="sheet-title" id="mgTitle">Tower</div>
+        <div id="mgInfo" class="mg-info"></div>
+        <div class="mg-actions">
+          <button id="upgradeBtn" class="act up">⬆ Upgrade</button>
+          <button id="sellBtn" class="act sell">Sell</button>
+        </div>
+        <button class="sheet-close" id="manageClose">✕</button>
+      </div>
     </div>
 
-    <!-- 오버레이 (시작/승리/패배) -->
-    <div id="overlay" class="overlay">
+    <!-- ===== RESULT OVERLAY ===== -->
+    <div id="overlay" class="overlay hidden">
       <div class="ov-card">
-        <div id="ovTitle" class="ov-title">KINGDOM<br>GUARD</div>
-        <div id="ovSub" class="ov-sub">Tap START WAVE to defend the crystal.<br>Build towers along the path!</div>
-        <button id="ovBtn" class="ov-btn">TAP TO PLAY</button>
+        <div id="ovTitle" class="ov-title">VICTORY!</div>
+        <div id="ovStars" class="ov-stars hidden"></div>
+        <div id="ovSub" class="ov-sub"></div>
+        <div class="ov-btns">
+          <button id="ovNext" class="ov-btn next">NEXT MAP ▶</button>
+          <button id="ovBtn" class="ov-btn">RETRY</button>
+          <button id="ovMenu" class="ov-btn ghost">MAPS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RANKING ===== -->
+    <div id="scr-rank" class="screen hidden">
+      <div class="scr-top"><button id="rankBack" class="back">‹</button><div class="scr-title">🏆 RANKING</div><button id="rankRefresh" class="back">⟳</button></div>
+      <div id="rankStatus" class="rank-status">Loading…</div>
+      <div id="rankList" class="rank-list"></div>
+    </div>
+
+    <!-- ===== NICKNAME MODAL ===== -->
+    <div id="nickModal" class="modal hidden">
+      <div class="modal-card">
+        <div class="modal-title">Enter your name</div>
+        <div class="modal-sub">Appear on the global leaderboard</div>
+        <input id="nickInput" maxlength="12" placeholder="e.g. DragonKing" autocomplete="off" />
+        <button id="nickSave" class="menu-btn play">SAVE</button>
       </div>
     </div>
   </div>
+  <script src="sound.js"></script>
+  <script src="lb.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
