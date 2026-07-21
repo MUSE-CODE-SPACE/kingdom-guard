@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Kingdom Guard</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="stat"><span class="ico">❤️</span><span id="lives">20</span></div>
+      <div class="stat"><span class="ico">🪙</span><span id="gold">120</span></div>
+      <div class="stat"><span class="ico">🌊</span><span id="wave">0/12</span></div>
+    </div>
+
+    <!-- 하단 컨트롤 -->
+    <div id="bottombar">
+      <button id="startBtn" class="big">▶ START WAVE</button>
+      <button id="speedBtn" class="small">1×</button>
+    </div>
+
+    <!-- 타워 빌드 시트 -->
+    <div id="buildSheet" class="sheet hidden">
+      <div class="sheet-title">Build Tower</div>
+      <div class="towers" id="towerList"></div>
+      <button class="sheet-close" id="buildClose">✕</button>
+    </div>
+
+    <!-- 타워 관리 시트 -->
+    <div id="manageSheet" class="sheet hidden">
+      <div class="sheet-title" id="mgTitle">Tower</div>
+      <div id="mgInfo" class="mg-info"></div>
+      <div class="mg-actions">
+        <button id="upgradeBtn" class="act up">⬆ Upgrade</button>
+        <button id="sellBtn" class="act sell">Sell</button>
+      </div>
+      <button class="sheet-close" id="manageClose">✕</button>
+    </div>
+
+    <!-- 오버레이 (시작/승리/패배) -->
+    <div id="overlay" class="overlay">
+      <div class="ov-card">
+        <div id="ovTitle" class="ov-title">KINGDOM<br>GUARD</div>
+        <div id="ovSub" class="ov-sub">Tap START WAVE to defend the crystal.<br>Build towers along the path!</div>
+        <button id="ovBtn" class="ov-btn">TAP TO PLAY</button>
+      </div>
+    </div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>

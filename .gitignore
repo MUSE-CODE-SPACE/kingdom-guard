@@ -1,0 +1,10 @@
+node_modules/
+.venv/
+android/app/build/
+android/keystore/
+android/.gradle/
+android/local.properties
+*.aab
+*.apk
+.DS_Store
+raw-art/*.png

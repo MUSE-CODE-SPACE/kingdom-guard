@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kingdom Guard</string>
+    <string name="title_activity_main">Kingdom Guard</string>
+    <string name="package_name">com.muse.kingdomguard</string>
+    <string name="custom_url_scheme">com.muse.kingdomguard</string>
+</resources>
