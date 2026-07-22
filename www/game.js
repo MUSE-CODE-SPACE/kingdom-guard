@@ -14,8 +14,13 @@ addEventListener("resize",fit); fit();
 const IMG={};
 const AL={ enemy_slime:"img/enemy_slime.png",enemy_runner:"img/enemy_runner.png",enemy_tank:"img/enemy_tank.png",
   enemy_boss:"img/enemy_boss.png",tower_cannon:"img/tower_cannon.png",tower_archer:"img/tower_archer.png",
-  tower_frost:"img/tower_frost.png",crystal:"img/crystal.png" };
-for (const k in AL){ const im=new Image(); im.onload=()=>IMG[k]=im; im.src=AL[k]; }
+  tower_frost:"img/tower_frost.png",tower_poison:"img/tower_poison.png",tower_tesla:"img/tower_tesla.png",crystal:"img/crystal.png" };
+// white-tinted silhouette cache (for hit flash — clipped to sprite, never the background)
+const IMGW={};
+function makeWhite(im){ const c=document.createElement("canvas"); c.width=im.width; c.height=im.height;
+  const x=c.getContext("2d"); x.drawImage(im,0,0); x.globalCompositeOperation="source-atop";
+  x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height); return c; }
+for (const k in AL){ const im=new Image(); im.onload=()=>{ IMG[k]=im; if(k.startsWith("enemy_")) IMGW[k]=makeWhite(im); }; im.src=AL[k]; }
 
 /* ---------- themes / maps ---------- */
 const THEMES={
@@ -44,8 +49,8 @@ const TOWERS={
   cannon:{name:"Cannon",cost:45,range:165,dmg:26,rate:0.95,splash:48,proj:"#2a2a2a",pspeed:640,color:"#3aa0c0",img:"tower_cannon",desc:"Splash damage",sfx:"shoot"},
   archer:{name:"Archer",cost:32,range:205,dmg:11,rate:0.32,splash:0,proj:"#ffe08a",pspeed:820,color:"#8fe36a",img:"tower_archer",desc:"Fast shots",sfx:"shootArcher"},
   frost:{name:"Frost",cost:55,range:150,dmg:7,rate:0.8,splash:0,proj:"#bfeaff",pspeed:700,color:"#7ec8ff",img:"tower_frost",slow:0.5,slowT:1.6,desc:"Slows enemies",sfx:"shootFrost"},
-  poison:{name:"Poison",cost:60,range:170,dmg:6,rate:1.0,splash:0,proj:"#9be36a",pspeed:600,color:"#7bc043",dot:14,dotT:3,desc:"Damage over time",sfx:"shootArcher"},
-  tesla:{name:"Tesla",cost:80,range:160,dmg:16,rate:0.7,splash:0,proj:"#c8f0ff",pspeed:1200,color:"#c88bff",chain:3,desc:"Chain lightning",sfx:"shootFrost"},
+  poison:{name:"Poison",cost:60,range:170,dmg:6,rate:1.0,splash:0,proj:"#9be36a",pspeed:600,color:"#7bc043",img:"tower_poison",dot:14,dotT:3,desc:"Damage over time",sfx:"shootArcher"},
+  tesla:{name:"Tesla",cost:80,range:160,dmg:16,rate:0.7,splash:0,proj:"#c8f0ff",pspeed:1200,color:"#c88bff",img:"tower_tesla",chain:3,desc:"Chain lightning",sfx:"shootFrost"},
 };
 const TKEYS=["cannon","archer","frost","poison","tesla"];
 const ENEMIES={
@@ -246,8 +251,7 @@ function drawSpots(){
 function drawTower(t){ const d=TOWERS[t.type]; ctx.save(); ctx.translate(t.x,t.y);
   ctx.fillStyle="rgba(30,20,8,.32)"; ctx.beginPath(); ctx.ellipse(0,14,38,19,0,0,7); ctx.fill();
   const img=IMG[d.img];
-  if(img){ ctx.save(); ctx.rotate(t.angle+Math.PI/2); const sz=88+(t.lvl-1)*7; ctx.drawImage(img,-sz/2,-sz/2,sz,sz); ctx.restore();
-    if(t.type==="poison"||t.type==="tesla"){ ctx.globalAlpha=.5; ctx.fillStyle=d.color; ctx.beginPath(); ctx.arc(0,-4,20,0,7); ctx.fill(); ctx.globalAlpha=1; } }
+  if(img){ ctx.save(); ctx.rotate(t.angle+Math.PI/2); const sz=88+(t.lvl-1)*7; ctx.drawImage(img,-sz/2,-sz/2,sz,sz); ctx.restore(); }
   else { ctx.fillStyle=d.color; ctx.beginPath(); ctx.arc(0,0,28,0,7); ctx.fill(); ctx.save(); ctx.rotate(t.angle); ctx.fillStyle="#2a2a2a"; ctx.fillRect(0,-7,40,14); ctx.restore(); }
   if(t.flash>0){ ctx.save(); ctx.rotate(t.angle); ctx.fillStyle="rgba(255,255,220,.85)"; ctx.beginPath(); ctx.arc(44,0,11,0,7); ctx.fill(); ctx.restore(); }
   for(let i=0;i<t.lvl;i++){ ctx.fillStyle="#ffce54"; ctx.beginPath(); ctx.arc(-18+i*16,-40,5.5,0,7); ctx.fill(); ctx.strokeStyle="#7a4e12"; ctx.lineWidth=2; ctx.stroke(); }
@@ -259,7 +263,7 @@ function drawEnemy(e){ const def=ENEMIES[e.type]; ctx.save(); ctx.translate(e.x,
   const img=IMG[def.img];
   if(img){ const s=e.r*2.3; ctx.drawImage(img,-s/2,-s/2,s,s);
     if(e.armor>0.3){ ctx.strokeStyle="rgba(180,200,220,.9)"; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(0,0,e.r+2,0,7); ctx.stroke(); }
-    if(e.hit>0){ ctx.globalCompositeOperation="source-atop"; ctx.fillStyle="rgba(255,255,255,.7)"; ctx.fillRect(-s/2,-s/2,s,s); ctx.globalCompositeOperation="source-over"; } }
+    if(e.hit>0 && IMGW[def.img]){ ctx.globalAlpha=Math.min(0.85,e.hit/0.12*0.85); ctx.drawImage(IMGW[def.img],-s/2,-s/2,s,s); ctx.globalAlpha=1; } }
   else { ctx.fillStyle=e.hit>0?"#fff":def.color; ctx.beginPath(); ctx.arc(0,0,e.r,0,7); ctx.fill(); }
   if(e.slowU>G.time){ ctx.strokeStyle="rgba(126,200,255,.9)"; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,e.r+4,0,7); ctx.stroke(); }
   if(e.dotU>G.time){ ctx.fillStyle="rgba(123,192,67,.5)"; ctx.beginPath(); ctx.arc(0,0,e.r+2,0,7); ctx.fill(); }
